@@ -32,6 +32,8 @@ Sub SAFAC_UnlockAll()
    
 End Sub
 
+
+
 Sub SAFAC_ProtectAndLockAll()
 
     Application.ScreenUpdating = False
@@ -52,4 +54,15 @@ Sub SAFAC_ProtectAndLockAll()
     Worksheets(2).Activate
     Application.ScreenUpdating = True
    
+End Sub
+
+
+
+Sub LockWorksheet()
+'
+' LockWorksheet Macro
+'
+' Keyboard Shortcut: Ctrl+l
+'
+    ActiveSheet.Protect "canescanes"
 End Sub
