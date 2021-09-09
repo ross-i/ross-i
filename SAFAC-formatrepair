@@ -1,0 +1,127 @@
+Private Function FirstBlank() As String
+'In the Master Log, finds the index of the first row with a blank in column A
+'Returns:
+'   a String referring to the first blank cell in column A
+'
+    Dim MasterLog As String
+    MasterLog = "FY21 Master Log.xlsm"
+
+
+    Dim ws As Worksheet
+    'accesses the sheet for the master budget log in the master log workbook
+    Set ws = Workbooks("FY21 Master Log.xlsm").Worksheets("Master Budget Log")
+    'finds the first blank in column A
+    For Each cell In ws.Columns("A").Cells
+        If Len(cell) = 0 Then
+            FirstBlank = cell.Row: Exit For
+        End If
+    Next cell
+    
+End Function
+Sub FormatRepair()
+'
+' FormatRepair Macro
+'
+' Keyboard Shortcut: Ctrl+Shift+R
+'
+If ActiveSheet.name = "Master Budget Log" Then
+    Dim k, numRows As Integer
+    k = 2
+    numRows = FirstBlank()
+    Do While k < (numRows)
+        If k Mod 2 = 0 Then
+            For Each cell In Range(Cells(k, "A"), Cells(k, "F"))
+                If (cell.Interior.Color = RGB(207, 226, 243)) Then
+                    cell.Interior.Color = RGB(255, 255, 255)
+                End If
+            Next
+            For Each cell In Range(Cells(k, "G"), Cells(k, "H"))
+                If (cell.Interior.Color = RGB(207, 226, 243) Or cell.Interior.Color = RGB(255, 255, 255)) Then
+                    cell.Interior.Color = RGB(252, 225, 209)
+                End If
+                
+            Next
+            For Each cell In Range(Cells(k, "I"), Cells(k, "K"))
+                If (cell.Interior.Color = RGB(182, 215, 168) Or cell.Interior.Color = RGB(255, 255, 255)) Then
+                    cell.Interior.Color = RGB(217, 234, 211)
+                End If
+            Next
+            For Each cell In Range(Cells(k, "L"), Cells(k, "N"))
+                If (cell.Interior.Color = RGB(207, 226, 243)) Then
+                    cell.Interior.Color = RGB(255, 255, 255)
+                End If
+            Next
+        Else
+            For Each cell In Range(Cells(k, "A"), Cells(k, "F"))
+                If (cell.Interior.Color = RGB(255, 255, 255)) Then
+                    cell.Interior.Color = RGB(207, 226, 243)
+                End If
+            Next
+            For Each cell In Range(Cells(k, "G"), Cells(k, "H"))
+                If (cell.Interior.Color = RGB(252, 225, 209) Or cell.Interior.Color = RGB(255, 255, 255)) Then
+                    cell.Interior.Color = RGB(249, 203, 156)
+                End If
+            Next
+            For Each cell In Range(Cells(k, "I"), Cells(k, "K"))
+                If (cell.Interior.Color = RGB(217, 234, 211) Or cell.Interior.Color = RGB(255, 255, 255)) Then
+                    cell.Interior.Color = RGB(182, 215, 168)
+                End If
+            Next
+            For Each cell In Range(Cells(k, "L"), Cells(k, "N"))
+                If (cell.Interior.Color = RGB(255, 255, 255)) Then
+                    cell.Interior.Color = RGB(207, 226, 243)
+                End If
+            Next
+        End If
+        k = k + 1
+    Loop
+    
+    'Row Height
+    Rows(numRows).RowHeight = 13.5
+    
+    'Selects all and adds all borders
+    Range(Cells(2, "A"), Cells(numRows, "M")).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+End If
+End Sub
+
+
