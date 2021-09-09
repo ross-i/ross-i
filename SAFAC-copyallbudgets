@@ -1,0 +1,267 @@
+'Author: Matthew Rossi, SASO Financial Student Intern
+'Date: Summer-Fall 2020
+
+'This module copies data from the "Summary for Importing" tabs of SAFAC Budgets into SASO Financial's Master Log.
+'Points of maintenance:
+'Change MasterLog = ? below every Fiscal Year
+
+Dim MasterLog As String
+
+
+Public Sub CopyAllBudgets()
+'This is the Main Sub.
+'Copies data from all budgets (including those in subfolders) inside a folder selected by the user.
+'Function Calls: FirstBlank(), DateReader(), RecursiveCopy(), Paster(), DeleteBlankRows()
+
+'CHANGE THIS BETWEEN FISCAL YEARS
+MasterLog = "FY21 Master Log.xlsm"
+'^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    
+    Dim FldrPicker As FileDialog
+    Dim fs As Object
+    Dim objFolder As Variant
+    
+    'Optimize Macro Speed
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+    Application.Calculation = xlCalculationManual
+    
+    'Creates a file system object
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    
+    'Remembering the value of the first blank cell lets us know where we started pasting from
+    'We need it so that we know where to start when adding dates later.
+    Dim firstBlankCell As String
+    firstBlankRow = FirstBlank()
+    
+    'Retrieve Target Folder Path From User
+    Set FldrPicker = Application.FileDialog(msoFileDialogFolderPicker)
+    
+    With FldrPicker
+        .Title = "Select A Target Folder"
+        .AllowMultiSelect = False
+        If .Show <> -1 Then GoTo NextCode
+        Set objFolder = fs.GetFolder(.SelectedItems(1))
+    End With
+    
+'In Case of Cancel
+NextCode:
+    If objFolder = "" Then GoTo ResetSettings
+    
+    'Extracts the date from the name of the object folder
+    Dim dateApproved As String
+    dateApproved = DateReader(objFolder.name)
+    
+    'Runs Paster on every budget within the object folder or any of its subfolders
+    'Calls RecursiveCopy on every subfolder
+    For Each folder In objFolder.subFolders
+        RecursiveCopy (folder.Path)
+    Next folder
+        
+    'Runs paster on each file, then deletes blank rows from the destination worksheet
+    For Each file In objFolder.Files
+        Paster (file.Path)
+        DeleteBlankRows
+    Next file
+            
+    'Adds dates
+    Dim rowIndex As Integer
+    'FirstBlank() returns a string that contains a column and a row,
+    'so we use the Mid() function to extract the row value,
+    'then we typecast the resulting string as an int using CInt()
+    For rowIndex = (CInt(firstBlankRow) - 1) To CInt(FirstBlank())
+        If Cells(rowIndex, "A").Value <> "" Then
+            Cells(rowIndex, "L").Value = Date 'Date is a keyword that gives today's date
+            Cells(rowIndex, "M").Value = dateApproved
+        End If
+    Next
+       
+ResetSettings:
+        Set objFolder = Nothing
+      'Reset Macro Optimization Settings
+        Application.EnableEvents = True
+        Application.Calculation = xlCalculationAutomatic
+        Application.ScreenUpdating = True
+    
+End Sub
+
+Private Sub RecursiveCopy(folderpath As String)
+'Performs the same actions as the latter half of CopyAllBudgets(), but recursively on all subfolders.
+'That is, it calls RecursiveCopy() on all subfolders; and, it calls Paster (followed by DeleteBlankRows) on all files
+'Called by: CopyAllBudgets(), RecursiveCopy()
+'Function Calls: RecursiveCopy(), Paster(), DeleteBlankRows
+'Parameter:
+'   folderPath - a String containing the full path to the folder it is working with
+    
+    Dim FldrPicker As FileDialog
+    Dim fs As Object
+    Dim objFolder As Object
+
+    'Creates a file system object
+    Set fs = CreateObject("Scripting.FileSystemObject")
+
+    'Gets folder object as specified by input parameter path
+    Set objFolder = fs.GetFolder(folderpath)
+
+    'Runs Paster on every budget within the object folder or any of its subfolders
+    'Calls RecursiveCopy on every subfolder
+    For Each folder In objFolder.subFolders
+        RecursiveCopy (folder.Path)
+    Next folder
+    
+    'Runs paster on each file, then deletes blank rows from the destination worksheet
+    For Each file In objFolder.Files
+        Paster (file.Path)
+        DeleteBlankRows
+    Next file
+    
+End Sub
+Private Sub Paster(name As String)
+'This Sub does the heavy lifting - it copies from a "Summary for Importing" tab and pastes it in the Master Log.
+'Called By: CopyAllBudgets(), RecursiveCopy()
+'Function Calls: GetBudgetType(), SelectLastValue()
+'Parameter:
+'   name - filename of workbook to be opened
+    
+    Dim wb As Workbook
+    
+    'opens the specified workbook only if the filename contains the excel extension
+    If name Like "*.xls?" Then
+        Set wb = Workbooks.Open(name)
+    'if not, this sub ends
+    Else: GoTo Last
+    End If
+    DoEvents
+    
+    On Error GoTo Closer
+    'if this fails, the sub closes the workbook before ending
+    Dim BudgetType, LastValue As String
+    BudgetType = GetBudgetType(wb.name)
+    LastValue = SelectLastValue(wb.Worksheets("Summary for Importing" & BudgetType))
+    
+    'copy from summary for importing
+    wb.Worksheets("Summary for Importing" & BudgetType).Range("A2:H" & LastValue).Copy
+    
+    'paste to master log
+    Workbooks(MasterLog).Worksheets("Master Budget Log").Range("A" & FirstBlank()).PasteSpecial Paste:=xlPasteValues
+    
+Closer:
+    'closes individual budget workbook
+    'turning "DisplayAlerts" off prevents user from being asked if they want to save wb
+    Application.DisplayAlerts = False
+    wb.Close
+    DoEvents
+    Application.DisplayAlerts = True
+    
+Last:
+End Sub
+Private Function FirstBlank() As String
+'In the Master Log, finds the index of the first row with a blank in column A
+'Returns:
+'   a String referring to the first blank cell in column A
+'
+
+    Dim ws As Worksheet
+    'accesses the sheet for the master budget log in the master log workbook
+    Set ws = Workbooks(MasterLog).Worksheets("Master Budget Log")
+    'finds the first blank in column A
+    For Each cell In ws.Columns("A").Cells
+        If Len(cell) = 0 Then
+            FirstBlank = cell.Row: Exit For
+        End If
+    Next cell
+    
+End Function
+Private Function DateReader(folderName As String) As String
+    'Extracts the date from a folder named like "XX-XX-XXXX Budgets"
+    'Parameter:
+    '   folderName - the name of the folder to pull the date from
+    'Returns:
+    '   the date as a String
+    
+    If folderName = "" Then
+        GoTo EndSub
+    End If
+        
+    Dim character As String
+    Dim i As Long
+    i = 1
+    DateReader = ""
+    character = ""
+    Do While character <> " " And i < Len(folderName)
+        character = Mid(folderName, i, 1)
+        DateReader = DateReader & character
+        i = i + 1
+    Loop
+    
+EndSub:
+End Function
+Private Function GetBudgetType(name As String) As String
+'Gets the Budget Type (Travel, Early, Reg1, or Reg2) from user input
+'Parameter:
+'   name - the name of the budget, for the user's reference
+'Returns:
+'   either "", " Early", " Reg1", or " Reg2", depending on the user's input
+    
+    Dim userInput As Integer
+    'Gets input from user.
+    'Title: name of budget
+    userInput = Application.InputBox(prompt:="Enter the Budget Type; -1 for travel, 0 for Early, 1 for Reg1, 2 for Reg2", Title:=name, Type:=1)
+    GetBudgetType = ""
+    If userInput = 0 Then
+        GetBudgetType = " Early"
+    ElseIf userInput = 1 Then
+        GetBudgetType = " Reg1"
+    ElseIf userInput = 2 Then
+        GetBudgetType = " Reg2"
+    End If
+    
+End Function
+Private Function SelectLastValue(ws As Worksheet) As String
+'On a "Summary For Importing" sheet, finds the index of the last row with data in it
+'Parameter:
+'   ws - the worksheet on which to perform the operation
+'       it's always going to be a "Summary For Importing" Tab
+'Returns:
+'   the index of the last row with data in it as a String
+
+    i = 200
+    Do While (ws.Cells(i, 1).Value = "") And i > 1
+        i = i - 1
+    Loop
+    SelectLastValue = i
+
+End Function
+
+Private Sub DeleteBlankRows()
+'Blank rows in the "Summary For Importing" sheet (for items that are "Not Approved" by SAFAC) get copied to the Master Log
+'This sub removes those blank rows (but not the data around them) from the Master Log so that data from the next budget can be pasted
+
+    Dim SourceRange As Range
+    Dim EntireRow As Range
+ 
+    'sets a range variable of the current selection
+    Set SourceRange = Application.Selection
+    
+    Dim i As Integer
+    i = 0
+    
+    'instantiates an integer array
+    Dim blankRows(200) As Integer
+    'iterates over the source range (from top to bottom),
+    'tracking the numbers of rows with a blank or a 0 in column H ($ amount approved)
+    If Not (SourceRange Is Nothing) Then
+        For Each cell In SourceRange.Columns("H").Cells
+           If Len(cell) = 0 Or cell = "0" Then
+               blankRows(i) = cell.Row
+               i = i + 1
+           End If
+        Next cell
+          
+        'iterates from bottom to top, deleting rows as specified in the array
+        For j = i - 1 To 0 Step -1
+           Rows(blankRows(j)).EntireRow.Delete
+        Next
+    End If
+    
+End Sub
