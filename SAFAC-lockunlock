@@ -1,0 +1,55 @@
+Sub SAFAC_UnlockAll()
+'
+' UnlockSheet Macro
+'
+' Keyboard Shortcut: Cmd+Ctrl+u
+'
+' Cycles through all sheets and unlocks them
+' If a sheet is the Summary for Importing sheet then it will copy the first row formulas all the way down
+' in case Treasurers moved rows around on the detail sheet and broke formula references
+
+    Application.ScreenUpdating = False
+    Dim BudgetType As Boolean
+    
+    BudgetIsRegular = (InStr(ActiveWorkbook.name, "Travel") = 0) 'verify that workbook name does not contain "Travel"
+    
+    ActiveWorkbook.Unprotect "canescanes"
+    For Each ws In Worksheets 'loop through all worksheets
+        ws.Unprotect "canescanes" 'unlock each worksheet
+        If InStr(1, ws.name, "Summary for Importing") Then 'unhide
+            ws.Visible = True '##COMMENT OUT THIS LINE TO DISALLOW HIDING##
+            If BudgetIsRegular Then 'fix formulas on regular budget summary for importing sheets
+                ws.Activate
+                Range("A2:H2").Select
+                Selection.AutoFill Destination:=Range("A2:H125"), Type:=xlFillDefault
+            End If
+        End If
+    Next
+   
+' Returns you to the cover sheet
+    Worksheets(2).Activate
+    Application.ScreenUpdating = True
+   
+End Sub
+
+Sub SAFAC_ProtectAndLockAll()
+
+    Application.ScreenUpdating = False
+   
+    Dim ws As Worksheet
+   
+    ActiveWorkbook.Unprotect "canescanes"
+    
+    For Each ws In Worksheets
+        ws.Protect "canescanes"
+        If InStr(1, ws.name, "Summary for Importing") Then
+            ws.Visible = False
+        End If
+    Next
+   
+    ActiveWorkbook.Protect "canescanes"
+    ActiveWorkbook.Save
+    Worksheets(2).Activate
+    Application.ScreenUpdating = True
+   
+End Sub
