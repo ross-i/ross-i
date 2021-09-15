@@ -1,0 +1,64 @@
+Sub PrintEarly()
+'
+' PrintEarly Macro
+'
+
+'
+    Application.DisplayAlerts = False
+    Application.EnableEvents = False
+    With ActiveWorkbook
+        .Worksheets(2).PageSetup.BlackAndWhite = True
+        .Worksheets(4).PageSetup.BlackAndWhite = True
+        .PrintOut From:=2, To:=3, Copies:=2, Collate:=True, IgnorePrintAreas:=False
+        .Close
+    End With
+    Application.DisplayAlerts = True
+    Application.EnableEvents = True
+    DoEvents
+End Sub
+
+Sub PrintRegular1()
+'
+' PrintRegular1 Macro
+'
+
+    Application.DisplayAlerts = False
+    Application.EnableEvents = False
+    With ActiveWorkbook
+        .Unprotect "canescanes"
+        .Worksheets(2).PageSetup.BlackAndWhite = True
+        .Worksheets(5).PageSetup.BlackAndWhite = True
+        .Worksheets(4).Visible = False
+        .PrintOut From:=2, To:=3, Copies:=2, Collate:=True, IgnorePrintAreas:=False
+        .Worksheets(4).Visible = True
+        .Protect "canescanes"
+        .Close
+    End With
+    Application.DisplayAlerts = True
+    Application.EnableEvents = True
+    DoEvents
+End Sub
+
+Sub PrintRegular2()
+'
+' PrintRegular2 Macro
+'
+
+    Application.DisplayAlerts = False
+    Application.EnableEvents = False
+    With ActiveWorkbook
+        .Unprotect "canescanes"
+        .Worksheets(2).PageSetup.BlackAndWhite = True 'Cover sheet
+        .Worksheets(6).PageSetup.BlackAndWhite = True 'Regular 2
+        .Worksheets(4).Visible = False 'Hide Early
+        .Worksheets(5).Visible = False 'Hide Regular 1
+        .PrintOut From:=2, To:=3, Copies:=2, Collate:=True, IgnorePrintAreas:=False
+        .Worksheets(4).Visible = True 'Unhide Early
+        .Worksheets(5).Visible = True 'Unhide Regular 1
+        .Protect "canescanes"
+        '.Close
+    End With
+    Application.DisplayAlerts = True
+    Application.EnableEvents = True
+    DoEvents
+End Sub
