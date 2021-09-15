@@ -17,6 +17,24 @@ Sub PrintEarly()
     DoEvents
 End Sub
 
+Sub PrintTravel()
+'
+' PrintEarly Macro
+'
+
+'
+    Application.DisplayAlerts = False
+    Application.EnableEvents = False
+    With ActiveWorkbook
+        .Worksheets(2).PageSetup.BlackAndWhite = True
+        .PrintOut From:=2, To:=2, Copies:=2, Collate:=True, IgnorePrintAreas:=False
+        .Close
+    End With
+    Application.DisplayAlerts = True
+    Application.EnableEvents = True
+    DoEvents
+End Sub
+
 Sub PrintRegular1()
 '
 ' PrintRegular1 Macro
