@@ -2,7 +2,6 @@ Sub SAFAC_UnlockAll()
 '
 ' UnlockSheet Macro
 '
-' Keyboard Shortcut: Cmd+Ctrl+u
 '
 ' Cycles through all sheets and unlocks them
 ' If a sheet is the Summary for Importing sheet then it will copy the first row formulas all the way down
