@@ -16,13 +16,18 @@ Sub SAFAC_UnlockAll()
     ActiveWorkbook.Unprotect "canescanes"
     For Each ws In Worksheets 'loop through all worksheets
         ws.Unprotect "canescanes" 'unlock each worksheet
-        If InStr(1, ws.name, "Summary for Importing") Then 'unhide
-            ws.Visible = True '##COMMENT OUT THIS LINE TO DISALLOW HIDING##
+        If InStr(ws.name, "Summary for Importing") Then
             If BudgetIsRegular Then 'fix formulas on regular budget summary for importing sheets
                 ws.Activate
                 Range("A2:H2").Select
                 Selection.AutoFill Destination:=Range("A2:H125"), Type:=xlFillDefault
+            Else 
+                ws.Visible = True
             End If
+        End If
+        
+        If InStr(ws.name, "Comments") Then
+            ws.Visible = True
         End If
     Next
    
@@ -44,7 +49,11 @@ Sub SAFAC_ProtectAndLockAll()
     
     For Each ws In Worksheets
         ws.Protect "canescanes"
-        If InStr(1, ws.name, "Summary for Importing") Then
+        If InStr(ws.name, "Summary for Importing") Then
+            ws.Visible = False
+        End If
+        
+        If InStr(ws.name, "Comments") Then
             ws.Visible = False
         End If
     Next
