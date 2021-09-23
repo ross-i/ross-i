@@ -84,7 +84,7 @@ class feature_extractor(object):
                     maxdoclen = len(sentences)
                     
                 #add label 
-                labels.append(dic['stars'])
+                labels.append(line[1])
                 
         print('\nsaved %i records' % len(tokens))
                 
