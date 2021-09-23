@@ -30,7 +30,7 @@ class feature_extractor(object):
             for line in f:
             
                 lineno += 1
-                sys.stdout.write("processing line %i of aprox 4.7 million     \r" \
+                sys.stdout.write("processing line %i of approx 200,000     \r" \
                                  % lineno)
                 sys.stdout.flush()
                 line = f.readline().split("\t")
