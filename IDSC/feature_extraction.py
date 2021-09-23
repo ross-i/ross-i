@@ -94,7 +94,7 @@ class feature_extractor(object):
         #used all processed raw text to train word2vec
         self.allsents = [sent for doc in tokens for sent in doc]
 
-        self.model = Word2Vec(self.allsents, min_count=5, size=embedding_size, workers=4, iter=5)
+        self.model = Word2Vec(self.allsents, min_count=5, vector_size=embedding_size, workers=4, iter=5)
         self.model.init_sims(replace=True)
         
         #save all word embeddings to matrix
