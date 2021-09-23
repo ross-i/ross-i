@@ -86,10 +86,10 @@ class feature_extractor(object):
                 #add label 
                 labels.append(dic['stars'])
                 
-        print '\nsaved %i records' % len(tokens)
+        print('\nsaved %i records' % len(tokens))
                 
         #generate Word2Vec embeddings
-        print "generating word2vec embeddings"
+        print("generating word2vec embeddings")
 
         #used all processed raw text to train word2vec
         self.allsents = [sent for doc in tokens for sent in doc]
@@ -98,7 +98,7 @@ class feature_extractor(object):
         self.model.init_sims(replace=True)
         
         #save all word embeddings to matrix
-        print "saving word vectors to matrix"
+        print("saving word vectors to matrix")
         self.vocab = np.zeros((len(self.model.wv.vocab)+1,embedding_size))
         word2id = {}
 
@@ -122,7 +122,7 @@ class feature_extractor(object):
         unk = len(self.vocab)-1
 
         #convert words to word indicies
-        print "converting words to indices"
+        print("converting words to indices")
         self.data = {}
         for idx,doc in enumerate(tokens):
             sys.stdout.write('processing %i of %i records       \r' % (idx+1,len(tokens)))
@@ -139,12 +139,12 @@ class feature_extractor(object):
     def visualize_embeddings(self):
         
         #get most common words
-        print "getting common words"
+        print("getting common words")
         allwords = [word for sent in self.allsents for word in sent]
         counts = collections.Counter(allwords).most_common(500)
 
         #reduce embeddings to 2d using tsne
-        print "reducing embeddings to 2D"
+        print("reducing embeddings to 2D")
         embeddings = np.empty((500,embedding_size))
         for i in range(500):
             embeddings[i,:] = model[counts[i][0]]
@@ -152,7 +152,7 @@ class feature_extractor(object):
         embeddings = tsne.fit_transform(embeddings)
 
         #plot embeddings
-        print "plotting most common words"
+        print("plotting most common words")
         fig, ax = plt.subplots(figsize=(30, 30))
         for i in range(500):
             ax.scatter(embeddings[i,0],embeddings[i,1])
