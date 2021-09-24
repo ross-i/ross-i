@@ -1,0 +1,101 @@
+Sub ImportInventoryReports()
+'Written: 9/24/2021
+'Author: Matthew Rossi
+'matthew.rossi@miami.edu
+
+'Usage Notes: Download all the inventory files from NetSuite and put them alone in a folder.
+'             Run the macro and, when prompted, select that folder and select the Inventory Stock Template.
+'             The macro will leave a folder called "Output" inside the selected folder with the filled out
+'              and accordingly named templates.
+
+    Dim fs As Object
+    Dim objFolder As Variant
+    Dim template As Variant
+    Dim FldrPicker As FileDialog
+    Dim FilePicker As FileDialog
+    Dim targetfldrpath As String
+    
+    'Optimize Macro Speed
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+    Application.Calculation = xlCalculationManual
+    
+    'Creates a file system object
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    
+    'Retrieve Target Folder Path From User
+    Set FldrPicker = Application.FileDialog(msoFileDialogFolderPicker)
+    
+    With FldrPicker
+        .Title = "Select the Source Folder Containing Inventory Reports"
+        .AllowMultiSelect = False
+        If .Show <> -1 Then GoTo NextCode
+        Set objFolder = fs.GetFolder(.SelectedItems(1))
+    End With
+    
+    Set FilePicker = Application.FileDialog(msoFileDialogFilePicker)
+    
+    With FilePicker
+        .Title = "Select the Inventory Template"
+        .AllowMultiSelect = False
+        If .Show <> -1 Then GoTo NextCode
+        Set template = fs.GetFile(.SelectedItems(1))
+    End With
+    
+'In Case of Cancel
+NextCode:
+    If objFolder = "" Then GoTo ResetSettings
+    If template = "" Then GoTo ResetSettings
+        
+    'IF YOU WANT OUTPUT FOLDER NAMED DIFFERENTLY, EDIT THIS LINE:
+    targetfldrpath = objFolder.path & "\Output"
+    
+    If Not fs.FolderExists(targetfldrpath) Then
+        fs.CreateFolder (targetfldrpath)
+    End If
+    
+    For Each sourcefile In objFolder.Files
+    
+        Dim sourcewb, targetwb As Workbook
+        Dim loc, newpath As String
+        
+        'open the sourcewb
+        Set sourcewb = Workbooks.Open(sourcefile.path)
+        DoEvents
+        
+        'create a copy of template named based on location in sourcewb
+        loc = sourcewb.Worksheets(1).Range("F2").Value
+        
+        'IF YOU WANT OUTPUT FILES NAMED DIFFERENTLY, EDIT THIS LINE:
+        newpath = targetfldrpath & "\" & loc & " Inventory.xlsx"
+        
+        'if the target file already exists, skip this iteration of the loop
+        If fs.FileExists(newpath) Then
+            MsgBox ("Error: file " & newpath & " already exists")
+            GoTo Continue
+        End If
+        template.Copy (newpath)
+        Set targetwb = Workbooks.Open(newpath)
+        DoEvents
+        
+        'paste from sourcefile into copy of template
+        sourcewb.Worksheets(1).Cells.Copy
+        targetwb.Worksheets(1).Range("A1").PasteSpecial Paste:=xlPasteValues
+        
+        With targetwb:
+            .Save
+            .Close
+        End With
+Continue:
+        sourcewb.Close
+        
+    Next sourcefile
+       
+ResetSettings:
+        Set objFolder = Nothing
+      'Reset Macro Optimization Settings
+        Application.EnableEvents = True
+        Application.Calculation = xlCalculationAutomatic
+        Application.ScreenUpdating = True
+    
+End Sub
