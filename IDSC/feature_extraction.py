@@ -186,6 +186,6 @@ if __name__ == "__main__":
         os.makedirs('./data')
     
     #save vocab matrix and processed documents
-    np.save('./data/icd10_embeddings',vocab)
+    np.save('./data/icd10_embeddings.npy',vocab)
     with open('./data/icd10_data.pkl', 'wb') as f:
         pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
