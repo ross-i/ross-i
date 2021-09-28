@@ -104,7 +104,7 @@ class feature_extractor(object):
         word2id = {}
 
         #first row of embedding matrix isn't used so that 0 can be masked
-        for key,val in self.model.wv:
+        for key,val in self.model.wv: #this gives an error, too many values to unpack; FIX ME
             idx = val.__dict__['index'] + 1
             self.vocab[idx,:] = self.model.get_vector(key, norm=True)
             word2id[key] = idx
