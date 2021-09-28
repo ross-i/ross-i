@@ -94,18 +94,19 @@ class feature_extractor(object):
         #used all processed raw text to train word2vec
         self.allsents = [sent for doc in tokens for sent in doc]
 
-        self.model = Word2Vec(sentences=self.allsents, vector_size=embedding_size, window=5, min_count=5, workers=4)
-        self.model.init_sims(replace=True)
+        self.model = Word2Vec(sentences=self.allsents, vector_size=embedding_size, min_count=5, workers=4, epochs=5)
+        # self.model.init_sims(replace=True) # this function is obsoleted and destructive, 
+        #normed vectors are now generated dynamically on demand
         
         #save all word embeddings to matrix
         print("saving word vectors to matrix")
-        self.vocab = np.zeros((len(self.model.wv.vocab)+1,embedding_size))
+        self.vocab = np.zeros((len(self.model.wv)+1,embedding_size))
         word2id = {}
 
         #first row of embedding matrix isn't used so that 0 can be masked
-        for key,val in self.model.wv.vocab.iteritems():
+        for key,val in self.model.wv:
             idx = val.__dict__['index'] + 1
-            self.vocab[idx,:] = self.model[key]
+            self.vocab[idx,:] = self.model.get_vector(key, norm=True)
             word2id[key] = idx
             
         #normalize embeddings
