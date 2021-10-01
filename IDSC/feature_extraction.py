@@ -1,8 +1,6 @@
 import sys
-import ast
 import re
 import os
-from itertools import groupby
 import numpy as np
 import collections
 from gensim.models import Word2Vec
