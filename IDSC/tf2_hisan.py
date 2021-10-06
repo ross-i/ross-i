@@ -290,47 +290,61 @@ class hisan(object):
 
 if __name__ == "__main__":
 
-    '''
-    dummy test data
-    '''
-
     #params
     batch_size = 32
     epochs = 30
-    train_samples = 10000
-    test_samples = 1000
-    vocab_size = 10000
-    max_words = 1000
-    num_classes = 3
-    embedding_size = 300
+    num_classes = 140
+    embedding_size = 512
     attention_heads = 8
     attention_size = 400
     
-    #create data
-    vocab = np.random.rand(vocab_size,embedding_size)
-    X_train = []
-    X_test = []
-    for i in range(train_samples):
-        l = np.random.randint(50,max_words)
-        X = np.zeros(max_words)
-        X[:l] = np.random.randint(1,vocab_size,l)
-        X_train.append(X)
-    for i in range(test_samples):
-        l = np.random.randint(50,max_words)
-        X = np.zeros(max_words)
-        X[:l] = np.random.randint(1,vocab_size,l)
-        X_test.append(X)
-    X_train = np.vstack(X_train)
-    X_test = np.vstack(X_test)
-    y_train = np.random.randint(0,num_classes,train_samples)
-    y_test = np.random.randint(0,num_classes,test_samples)
+    vocab = np.load('data/icd10_embeddings.npy')
+    with open('data/icd10_data.pkl', 'rb') as f:
+        data = pickle.load(f)
+        
+    num_docs = len(data)
+
+    #convert data to numpy arrays
+    print("converting data to arrays")
+    max_words = 0
+    docs = []
+    labels = []
+    for i in range(num_docs):
+        sys.stdout.write("processing record %i of %i       \r" % (i+1,num_docs))
+        sys.stdout.flush()
+        doc = data[i]['idx']
+        doc = [item for sublist in doc for item in sublist]
+        docs.append(doc)
+        labels.append(data[i]['label'][:3])
+        if len(doc) > max_words:
+            max_words = len(doc)
+    del data
+    
+    #label encoder
+    le = LabelEncoder()
+    y = le.fit_transform(labels)
+    classes = len(le.classes_)
+    lb = LabelBinarizer()
+    lb.fit(y)
+    del labels
+
+    #test train split
+    X_train,X_test,y_train,y_test = train_test_split(docs,y,test_size=0.1,
+                                    random_state=1234,stratify=y)
+                                    
+    X_train,X_valid,y_train,y_valid = train_test_split(X_train,y_train,test_size=0.12,
+                                      random_state=1234,stratify=y_train)
+
+    y_train = lb.transform(y_train)
+    y_valid = lb.transform(y_valid)
+    y_test = lb.transform(y_test)
 
     #make save dir
     if not os.path.exists('savedmodels'):
         os.makedirs('savedmodels')   
 
     #train model
-    model = hisan(vocab,num_classes,int(np.ceil(max_words/15)+1),15,
+    model = hisan(vocab,num_classes,max_sents,max_words,
                   attention_heads,attention_size)
     model.train(X_train,y_train,batch_size,epochs,validation_data=(X_test,y_test),
                 savebest=True,filepath='savedmodels/model.ckpt')
