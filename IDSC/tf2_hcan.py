@@ -5,6 +5,8 @@ from tensorflow.keras.layers import LayerNormalization as layer_norm
 import sys
 import time
 
+from tensorflow.python.client import device_lib
+
 class hcan(object):
 
     def __init__(self,embedding_matrix,num_classes,max_sents,max_words,attention_heads=8,
