@@ -390,7 +390,10 @@ if __name__ == "__main__":
     from sklearn.model_selection import train_test_split
     import pickle
     import os
-
+    
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0" 
+    print(device_lib.list_local_devices())
+    tf.compat.v1.disable_eager_execution()
     #load saved files
     print("loading data")
     vocab = np.load('data/icd10_embeddings.npy')
