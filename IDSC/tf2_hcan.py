@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import LayerNormalization as layer_norm
+from tensorflow.keras.layers import LayerNormalization
 import sys
 import time
 
@@ -128,6 +128,7 @@ class hcan(object):
         outputs2 = tf.compat.v1.where(tf.equal(mask,0),tf.zeros_like(outputs2),outputs2)
         
         outputs = tf.multiply(outputs1,outputs2)
+        layer_norm = LayerNormalization()
         outputs = layer_norm(outputs)
         
         #word target attention
