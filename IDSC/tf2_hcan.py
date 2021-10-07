@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib.layers import layer_norm
+from tensorflow.keras.layers import LayerNormalization as layer_norm
 import sys
 import time
 
@@ -410,7 +410,7 @@ if __name__ == "__main__":
         sys.stdout.flush()
         doc = data[i]['idx']
         docs.append(doc)
-        labels.append(data[i]['label'])
+        labels.append(data[i]['label'][:3])
         if len(doc) > max_sents:
             max_sents = len(doc)
         if len(max(doc,key=len)) > max_words:
