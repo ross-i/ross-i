@@ -22,7 +22,7 @@ class feature_extractor(object):
         tokens = []
         maxsentlen = 0
         maxdoclen = 0
-        n_skips = 0
+        skips = 0
 
         #process txt one line at a time
         with open(txt_path,'r') as f:
