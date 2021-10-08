@@ -25,6 +25,7 @@ class feature_extractor(object):
 
         #process txt one line at a time
         with open(txt_path,'r') as f:
+            f.readline()
             lineno = 0
             for line in f:
             
