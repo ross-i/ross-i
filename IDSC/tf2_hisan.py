@@ -290,6 +290,8 @@ class hisan(object):
 
 if __name__ == "__main__":
 
+    import pickle
+    
     #params
     batch_size = 32
     epochs = 30
