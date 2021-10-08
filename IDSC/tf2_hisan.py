@@ -293,7 +293,7 @@ if __name__ == "__main__":
     #params
     batch_size = 32
     epochs = 30
-    num_classes = 140
+    num_classes = 141
     embedding_size = 512
     attention_heads = 8
     attention_size = 400
@@ -313,6 +313,8 @@ if __name__ == "__main__":
         sys.stdout.write("processing record %i of %i       \r" % (i+1,num_docs))
         sys.stdout.flush()
         doc = data[i]['idx']
+        if len(doc) > max_sents:
+            max_sents = len(doc)
         doc = [item for sublist in doc for item in sublist]
         docs.append(doc)
         labels.append(data[i]['label'][:3])
