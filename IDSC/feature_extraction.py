@@ -22,7 +22,6 @@ class feature_extractor(object):
         tokens = []
         maxsentlen = 0
         maxdoclen = 0
-        skips = 0
 
         #process txt one line at a time
         with open(txt_path,'r') as f:
@@ -33,7 +32,7 @@ class feature_extractor(object):
                 sys.stdout.write("processing line %i of approx 200,000     \r" \
                                  % lineno)
                 sys.stdout.flush()
-                line = f.readline().split("\t")
+                line = line.split("\t")
                 
                 text = line[2]
                         
@@ -61,7 +60,6 @@ class feature_extractor(object):
                 
                 #drop empty reviews
                 if len(text) == 0:
-                  skips += 1
                   continue
 
                 #split into sentences
@@ -87,7 +85,6 @@ class feature_extractor(object):
                 #add label 
                 labels.append(line[1])
                 
-        print('\nskipped %i lines' % skips)
         print('\nsaved %i records' % len(tokens))
                 
         #generate Word2Vec embeddings
