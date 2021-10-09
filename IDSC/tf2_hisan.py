@@ -309,6 +309,7 @@ if __name__ == "__main__":
     #convert data to numpy arrays
     print("converting data to arrays")
     max_words = 0
+    max_sents = 0
     docs = []
     labels = []
     for i in range(num_docs):
