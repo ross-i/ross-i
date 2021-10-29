@@ -28,9 +28,9 @@ def process_text(text):
     return text
 
 data = pd.read_csv("data/icd10sitesonly.txt","\t")
-labels = list(c50_data['c.icd10_after_spilt'])
+labels = list(data['c.icd10_after_spilt'])
 docs = []
-for doc in list(c50_data['c.path_notes']):
+for doc in list(data['c.path_notes']):
     docs.append(process_text(doc))
     
 print("vectorizing docs")
