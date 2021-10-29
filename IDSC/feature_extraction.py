@@ -35,7 +35,7 @@ class feature_extractor(object):
                 sys.stdout.flush()
                 line = line.split("\t")
                 
-                text = line[2]
+                text = line[-1]
                         
                 #process text
                 text = text.lower()
@@ -84,7 +84,7 @@ class feature_extractor(object):
                     maxdoclen = len(sentences)
                     
                 #add label 
-                labels.append(line[1])
+                labels.append(line[-2])
                 
         print('\nsaved %i records' % len(tokens))
                 
