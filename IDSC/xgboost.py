@@ -27,7 +27,7 @@ def process_text(text):
     text = re.sub('1400 nw \d* ?\w* ?room ?\d*', '', text)
     return text
 
-data = pd.read_csv("icd10sitesonly.txt","\t")
+data = pd.read_csv("/data/icd10sitesonly.txt","\t")
 labels = list(c50_data['c.icd10_after_spilt'])
 docs = []
 for doc in list(c50_data['c.path_notes']):
