@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from pylab import plt
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
