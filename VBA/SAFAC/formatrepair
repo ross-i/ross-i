@@ -36,7 +36,7 @@ If ActiveSheet.name = "Master Budget Log" Then
                 End If
             Next
             For Each cell In Range(Cells(k, "G"), Cells(k, "H"))
-                If (cell.Interior.Color = RGB(207, 226, 243) Or cell.Interior.Color = RGB(255, 255, 255)) Then
+                If (cell.Interior.Color = RGB(249, 203, 156) Or cell.Interior.Color = RGB(255, 255, 255)) Then
                     cell.Interior.Color = RGB(252, 225, 209)
                 End If
                 
