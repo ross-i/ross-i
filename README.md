@@ -1,4 +1,4 @@
-- 👋 Hi, I’m rossi @ross-i, a student at the University of Miami (FL) with dual majors in Mathematics and Computer Science.
+- 👋 Hi, I’m rossi @ross-i, a recent graduate of the University of Miami (FL) with dual Bachelor of Science in Mathematics and Computer Science.
 
 Find me on LinkedIn:
 www.linkedin.com/in/matthew-a-rossi/
