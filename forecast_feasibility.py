@@ -1,3 +1,10 @@
+
+# Given user-specified parameters, this script pulls sales data and analyzes whether the data is sufficient
+#       to forecast future sales in the given segments.
+
+# July-August 2022
+# Author: Matthew Rossi
+
 from LibRefDAO.DAO import DAO
 
 import os
