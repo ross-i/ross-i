@@ -29,7 +29,7 @@ label_stop = None
 if len(args) >= 3:
     label_start = int(args[2])
     if len(args) == 4:
-    	label_stop = int(args[3])
+        label_stop = int(args[3])
     else: 
         label_stop = int(label_start)+1
 
