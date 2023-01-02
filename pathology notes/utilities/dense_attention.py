@@ -18,6 +18,10 @@ This file follows the terminology of https://arxiv.org/abs/1706.03762 Figure 2.
 Attention is formed by three tensors: Query, Key and Value.
 """
 
+# This script has been copied without modification from the repository for the paper by Gao, et. al found here:
+# https://www.sciencedirect.com/science/article/pii/S0933365719303562
+# https://github.com/iamshang1/Projects/tree/master/Papers/HiSAN
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
