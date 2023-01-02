@@ -1,3 +1,5 @@
+# Author: Matthew Rossi
+
 import numpy as np
 from sklearn.utils import resample
 import scipy.sparse as sps

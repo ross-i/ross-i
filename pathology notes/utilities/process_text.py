@@ -1,3 +1,5 @@
+# Author: Matthew Rossi
+
 import re
 def process_text(text):
     text = text.lower()

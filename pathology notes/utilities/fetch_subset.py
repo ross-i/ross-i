@@ -1,3 +1,5 @@
+# Author: Matthew Rossi
+
 def fetch_subset(data, code, mode='include'):
     """
 	data is a pandas table with the following columns: 'c.icd10_after_spilt', 'c.path_notes'
