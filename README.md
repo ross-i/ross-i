@@ -9,3 +9,4 @@ My repository contains:
 - *dimensionality reduction*, a project analyzing and testing various methods for reducing the dimensionality of data and the impact they might have on certain classification tasks.
 - *coin flip cheaters.ipynb*, a notebook that implements a strategy for tackling the probability challenge proposed [here](https://primerlearning.org/) by Justin Helps of the YouTube channel [Primer](https://www.youtube.com/c/PrimerLearning)
 - *covid vision.ipynb*, a computer vision project using three ResNet-type convolutional networks to classify CT scans of lungs to identify COVID-19 infection.
+- *forecast_feasibility.py*, a tool I wrote as an intern that automated a labor-intensive data analysis process while being flexible enough to handle custom requests from clients.
