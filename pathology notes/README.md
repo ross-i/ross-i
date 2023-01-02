@@ -4,7 +4,7 @@ As an undergraduate, I worked for two semesters (Fall 2021-Spring 2022) on this 
 
 Our goal was to reproduce the results of the 2019 paper [*Hierarchical attention networks for information extraction from cancer pathology reports*](https://www.sciencedirect.com/science/article/pii/S0933365719303562) on our own dataset of 200k cancer pathology reports pulled from the University of Miami's hospital system.
 
-I set out to train classifiers to predict the diagnosis code ( [ICD-10](https://www.icd10data.com/ICD10CM/Codes/C00-D49)) given the text of a cancer pathology note. This capability serves as proof-of-concept for extracting other information from the reports (stage, grade, tumor size, etc.).
+I set out to train classifiers to predict the diagnosis code ([ICD-10](https://www.icd10data.com/ICD10CM/Codes/C00-D49)) given the text of a cancer pathology note. This capability serves as proof-of-concept for extracting other information from the reports (stage, grade, tumor size, etc.).
 
 This repository contains:
 - *technical report*, which details the scope, work, and findings of the project.
