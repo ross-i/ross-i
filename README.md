@@ -1,8 +1,9 @@
-- 👋 Howdy, I’m rossi @ross-i, a recent graduate of the University of Miami (FL) with dual Bachelor of Science in Mathematics and Computer Science.
+- 👋 Howdy, I’m rossi @ross-i, a Data Science PhD student at the University of Chicago.
 
 Find me on LinkedIn:
 www.linkedin.com/in/matthew-a-rossi/
 
+Most of my work here is old, from my days as an undergraduate at the University of Miami (FL), but I'm excited to add updates here as I make progress on my current research.
 My repository contains:
 - */pathology notes/*, a medical NLP project I worked on for UM's Institute for Data Science and Computing.
 - */VBA/*, which contains some Microsoft Excel macros I wrote while working as a Student Financial Intern for the UM's Department of Student Activities and Student Organizations.
