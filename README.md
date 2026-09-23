@@ -4,7 +4,12 @@ Find me on LinkedIn:
 www.linkedin.com/in/matthew-a-rossi/
 
 Most of my work here is old, from my days as an undergraduate at the University of Miami (FL), but I'm excited to add updates here as I make progress on my current research.
-My repository contains:
+
+A couple fun projects I've built or helped build since I started at UofC:
+- The [Spatial Election Explorer (SEE)](https://github.com/ross-i/spatial-election-explorer), an interactive tool for simulating ranked-choice elections on the Euclidean plane.
+- [Cayley's Garden](https://github.com/ross-i/cayley-garden), an interactive, pedagogical tool for teaching some basics of (finite) group theory by visualizing Cayley graphs.
+
+My catch-all repository /ross-i/, all old work, contains:
 - */pathology notes/*, a medical NLP project I worked on for UM's Institute for Data Science and Computing.
 - */VBA/*, which contains some Microsoft Excel macros I wrote while working as a Student Financial Intern for the UM's Department of Student Activities and Student Organizations.
 - *dimensionality reduction*, a project analyzing and testing various methods for reducing the dimensionality of data and the impact they might have on certain classification tasks.
